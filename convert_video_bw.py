@@ -1,17 +1,14 @@
-from concurrent.futures import thread
 import find_block
 import cv2
 import yaml
-import threading
-from tqdm import tqdm
 
-video = 'video.mp4'
+video = 'video-bw.mp4'
 
 relativeX = 0
 relativeY = 77
 relativeZ = 0
 
-delay = 10
+delay = 2
 
 # demo frame.yml
 # blocks:
@@ -27,15 +24,6 @@ cap = cv2.VideoCapture(video)
 directory = './frames/'
 success = True
 vframe = 0
-
-threads = {}
-
-def async_write(file, contents):
-    fileYaml = yaml.safe_load(contents)
-    with open(file, 'w') as f:
-        yaml.dump(fileYaml, f)
-    
-
 while success:
     success, frame = cap.read()
 
@@ -47,28 +35,31 @@ while success:
     file = directory + str(vframe) + '.yml'
     fileContents = 'blocks: \n'
 
+    print(vframe)
+
     # loop through each pixel in the frame
-    pbar = tqdm(total=frame.shape[1])
-    pbar.set_description("Processing frame %d" % vframe)
     for i in range(frame.shape[1]):
-        pbar.update(1)
         fileContents += '  \'' + str(i + relativeX) + '\':\n'
         for j in range(frame.shape[0]):
             fileContents += '    \'' + str(j + relativeY) + '\':\n'
             # get the pixel color
             color = frame[frame.shape[0]-1-j, frame.shape[1]-1-i]
 
-            # find the closest block to the pixel color
-            block = find_block.find_closest_block(color)
+            # check if the pixel is black
+            if color[0] == 0 and color[1] == 0 and color[2] == 0:
+                block = 'black_concrete'
+            elif color[0] == 255 and color[1] == 255 and color[2] == 255:
+                block = 'white_concrete'
+            else:
+                block = 'black_concrete_powder'
 
             fileContents += '      \'-' + str(relativeZ) + '\': minecraft:' + block + '\n'
 
     fileContents += 'delay: ' + str(delay)
 
-    # write the frame using async_write in a thread
-    thread = threading.Thread(target=async_write, args=(file, fileContents))
-    thread.start()
+    # write the frame to a yml file
+    with open(file, 'w') as f:
+        fileYaml = yaml.safe_load(fileContents)
+        yaml.dump(fileYaml, f)
 
     vframe += 1
-
-    pbar.close()

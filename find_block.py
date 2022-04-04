@@ -1,16 +1,23 @@
 import json
 
 colord = [50, 90, 106]
-rgbL = ['b', 'g', 'r']
+rgbL = ['r', 'g', 'b']
 
 # json format: "acacia_leaves.png": {"r": 85, "g": 85, "b": 86}
+
+with open('averages.json') as f:
+    averages = json.load(f)
+
+colorChache = {}
 
 def find_closest_block(color):
     """
     Find the closest block to the given color.
     """
-    with open('averages.json') as f:
-        averages = json.load(f)
+    # if the color is already in the cache, return it
+    if str(color) in colorChache:
+        return colorChache[str(color)]
+
     closest_block = None
     closest_distance = None
     for block in averages:
@@ -20,6 +27,8 @@ def find_closest_block(color):
         if closest_distance is None or distance < closest_distance:
             closest_distance = distance
             closest_block = block
+
+    colorChache[str(color)] = remove_suffix(closest_block)
     return remove_suffix(closest_block)
 
 # funciton to remove _side* and .png from the filename
