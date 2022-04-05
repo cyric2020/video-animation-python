@@ -2,4 +2,4 @@ ffmpeg-python
 pytube
 tqdm
 opencv-python
-pyymal
+pyyaml
