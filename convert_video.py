@@ -4,6 +4,7 @@ import cv2
 import yaml
 import threading
 from tqdm import tqdm
+import os
 
 video = 'video.mp4'
 
@@ -11,7 +12,8 @@ relativeX = 0
 relativeY = 77
 relativeZ = 0
 
-delay = 10
+fps = 2
+delay = 20/fps
 
 # demo frame.yml
 # blocks:
@@ -34,7 +36,10 @@ def async_write(file, contents):
     fileYaml = yaml.safe_load(contents)
     with open(file, 'w') as f:
         yaml.dump(fileYaml, f)
-    
+
+# delete all frames
+for file in os.listdir(directory):
+    os.remove(directory + file)
 
 while success:
     success, frame = cap.read()
