@@ -10,13 +10,13 @@ with open('averages.json') as f:
 
 colorChache = {}
 
-def find_closest_block(color):
+def find_closest_block(color, cache=colorChache):
     """
     Find the closest block to the given color.
     """
     # if the color is already in the cache, return it
-    if str(color) in colorChache:
-        return colorChache[str(color)]
+    if str(color) in cache:
+        return cache[str(color)]
 
     closest_block = None
     closest_distance = None
@@ -28,7 +28,7 @@ def find_closest_block(color):
             closest_distance = distance
             closest_block = block
 
-    colorChache[str(color)] = remove_suffix(closest_block)
+    cache[str(color)] = remove_suffix(closest_block)
     return remove_suffix(closest_block)
 
 # funciton to remove _side* and .png from the filename
