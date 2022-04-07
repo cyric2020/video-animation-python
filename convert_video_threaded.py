@@ -32,8 +32,10 @@ directory = './frames/'
 success = True
 vframe = 0
 
-maxThreads = 10
+maxThreads = 2
 threads = []
+
+writeThreads = []
 
 cache = {}
 
@@ -64,14 +66,14 @@ def compute_frame(frame, vframe):
             # find the closest block to the pixel color
             block = find_block.find_closest_block(color, cache)
 
-            fileContents += '      \'-' + str(relativeZ) + '\': minecraft:' + block + '\n'
+            fileContents += '      \'-' + str(relativeZ) + '\': ' + block + '\n'
 
     fileContents += 'delay: ' + str(delay)
 
     # write the frame using async_write in a thread
     thread = threading.Thread(target=async_write, args=(file, fileContents))
     thread.start()
-    thread.join()
+    writeThreads.append(thread)
 
     pbar.close()
 
@@ -94,3 +96,6 @@ while success:
         for threadA in threads:
             threadA.join()
             threads.pop(threads.index(threadA))
+        for threadA in writeThreads:
+            threadA.join()
+            writeThreads.pop(writeThreads.index(threadA))
