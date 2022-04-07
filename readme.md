@@ -1,6 +1,6 @@
 # JustAnimations video converter
 
-This is a easy to use set of python scripts to convert youtube videos to (JustAnimations)[https://google.com] compatible save files
+This is a easy to use set of python scripts to convert youtube videos to ![JustAnimations](https://google.com) compatible save files
 
 ## Getting started
 
