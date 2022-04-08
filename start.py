@@ -25,7 +25,7 @@ if videoUrl != '':
 
     # Convert the video to a video with the correct FPS and resolution
     print("Converting video...")
-    ffmpeg.input('video-raw.mp4').output('video.mp4', vf='fps=' + fps + ',' + 'scale=' + hres + ':-1').run()
+    ffmpeg.input('video-raw.mp4').output('video.mp4', vf='fps=' + fps + ',' + 'scale=' + hres + ':-2').run()
 
 # run convert_video.py
 if threaded.lower() == 'y':
