@@ -66,7 +66,7 @@ while success:
             # find the closest block to the pixel color
             block = find_block.find_closest_block(color)
 
-            fileContents += '      \'-' + str(relativeZ) + '\': minecraft:' + block + '\n'
+            fileContents += '      \'-' + str(relativeZ) + '\': ' + block + '\n'
 
     fileContents += 'delay: ' + str(delay)
 
